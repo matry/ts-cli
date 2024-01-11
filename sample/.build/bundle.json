@@ -60,6 +60,15 @@
         "raw": "/assets/fonts/helvetica.ttf"
       }
     },
+    "branding.typography.secondary-font": {
+      "id": "branding.typography.secondary-font",
+      "name": "secondary-font",
+      "type": "asset",
+      "declared_value": {
+        "format": "ttf",
+        "raw": "/assets/fonts/arial.ttf"
+      }
+    },
     "branding.primary-purple": {
       "id": "branding.primary-purple",
       "name": "primary-purple",
@@ -83,6 +92,15 @@
       },
       {
         "assertion_operator": "positive",
+        "assertion_value": "rosemary",
+        "id": "branding.typography.secondary-font",
+        "declared_value": {
+          "format": "ttf",
+          "raw": "/assets/fonts/merit.ttf"
+        }
+      },
+      {
+        "assertion_operator": "negative",
         "assertion_value": "thyme",
         "id": "branding.typography.main-font",
         "declared_value": {

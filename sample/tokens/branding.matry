@@ -33,12 +33,14 @@ tokens branding {
 
   typography {
     asset main-font: /assets/fonts/helvetica.ttf
+    asset secondary-font: /assets/fonts/arial.ttf
 
     when $theme {
       is rosemary {
         main-font:  /assets/fonts/arial.ttf
+        secondary-font: /assets/fonts/merit.ttf
       }
-      is thyme {
+      is not thyme {
         main-font:  /assets/fonts/times-new-roman.ttf
       }
     }

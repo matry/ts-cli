@@ -1,40 +1,6 @@
 import { SyntaxNode } from 'tree-sitter'
 import { getChildOfType } from './ast.js'
 
-/*
-
-"token_assignments": {
-  "branding.primary-blue": [
-    {
-      "conditions": [
-        {
-          "identifier": "theme",
-          "assertion": "positive",
-          "value": "rosemary"
-        }
-      ],
-      "declared_value": {
-        "format": "hex",
-        "raw": "#007BFF"
-      }
-    }
-  ]
-
-  theme: [
-    {
-      assertion_operator: positive,
-      assertion_value: rosemary,
-      id: branding.primary-color,
-      declared_value: {
-        format: hex,
-        raw: #007BFF
-      },
-    }
-  ]
-},
-
-*/
-
 export function parseTokenAssignment(node: SyntaxNode) {
   const tokenContext = getTokenDeclarationContext(node)
 
@@ -67,7 +33,8 @@ export function parseTokenConditionalBlock(node: SyntaxNode, bundle: MatryBundle
   const assignments: any = {}
 
   let reference = ''
-  let assignment: any = {}
+  let assertion_operator = null
+  let assertion_value = null
 
   let i = 0
   while (i < node.namedChildren.length) {
@@ -77,21 +44,23 @@ export function parseTokenConditionalBlock(node: SyntaxNode, bundle: MatryBundle
         reference = childNode.firstNamedChild!.text
         break
       case 'positive_assertion':
-        assignment.assertion_operator = 'positive'
+        assertion_operator = 'positive'
         break
       case 'negative_assertion':
-        assignment.assertion_operator = 'negative'
+        assertion_operator = 'negative'
         break
       case 'identifier':
-        assignment.assertion_value = childNode.text
+        assertion_value = childNode.text
         break
       case 'token_assignment':
         const { id, declared_value } = parseTokenAssignment(childNode)
-        assignment.id = id
-        assignment.declared_value = declared_value
         assignments[reference] = assignments[reference] || []
-        assignments[reference].push(assignment)
-        assignment = {}
+        assignments[reference].push({
+          assertion_operator,
+          assertion_value,
+          id,
+          declared_value,
+        })
         break
       default:
         break
