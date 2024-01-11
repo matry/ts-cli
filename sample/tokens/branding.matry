@@ -1,0 +1,50 @@
+
+// when $dark-mode is off {
+//   primary-blue: #AAF000
+//   primary-orange: #009000
+// }
+
+// when $theme {
+//   is rosemary {
+//     typography {
+//       main-font: /assets/fonts/arial.ttf
+//     }
+//     spacing {
+//       vertical-1: 12px
+//     }
+//   }
+// }
+
+tokens branding {
+  copy {
+    text btn-copy: "hello world"
+  }
+
+  colors {
+    color primary-blue: #007BFF
+    color primary-orange: #BADA55
+  }
+
+  spacing {
+    dimension vertical-1: 8px
+    dimension vertical-2: $vertical-1
+    dimension vertical-3: $vertical-2
+  }
+
+  typography {
+    asset main-font: /assets/fonts/helvetica.ttf
+
+    when $theme {
+      is rosemary {
+        main-font:  /assets/fonts/arial.ttf
+      }
+      is thyme {
+        main-font:  /assets/fonts/times-new-roman.ttf
+      }
+    }
+  }
+
+  when $dark-mode is off {
+    primary-blue: #007BFF
+  }
+}

@@ -1,0 +1,106 @@
+{
+  "matry_version": "0.0.0",
+  "version": "1.0.0",
+  "token_declarations": {
+    "branding.copy.btn-copy": {
+      "id": "branding.copy.btn-copy",
+      "name": "btn-copy",
+      "type": "text",
+      "declared_value": "hello world"
+    },
+    "branding.colors.primary-blue": {
+      "id": "branding.colors.primary-blue",
+      "name": "primary-blue",
+      "type": "color",
+      "declared_value": {
+        "format": "hex",
+        "raw": "#007BFF"
+      }
+    },
+    "branding.colors.primary-orange": {
+      "id": "branding.colors.primary-orange",
+      "name": "primary-orange",
+      "type": "color",
+      "declared_value": {
+        "format": "hex",
+        "raw": "#BADA55"
+      }
+    },
+    "branding.spacing.vertical-1": {
+      "id": "branding.spacing.vertical-1",
+      "name": "vertical-1",
+      "type": "dimension",
+      "declared_value": {
+        "format": "px",
+        "raw": "8"
+      }
+    },
+    "branding.spacing.vertical-2": {
+      "id": "branding.spacing.vertical-2",
+      "name": "vertical-2",
+      "type": "dimension",
+      "declared_value": {
+        "ref": "vertical-1"
+      }
+    },
+    "branding.spacing.vertical-3": {
+      "id": "branding.spacing.vertical-3",
+      "name": "vertical-3",
+      "type": "dimension",
+      "declared_value": {
+        "ref": "vertical-2"
+      }
+    },
+    "branding.typography.main-font": {
+      "id": "branding.typography.main-font",
+      "name": "main-font",
+      "type": "asset",
+      "declared_value": {
+        "format": "ttf",
+        "raw": "/assets/fonts/helvetica.ttf"
+      }
+    },
+    "branding.primary-purple": {
+      "id": "branding.primary-purple",
+      "name": "primary-purple",
+      "type": "color",
+      "declared_value": {
+        "format": "hex",
+        "raw": "#BADA55"
+      }
+    }
+  },
+  "token_assignments": {
+    "theme": [
+      {
+        "assertion_operator": "positive",
+        "assertion_value": "rosemary",
+        "id": "branding.typography.main-font",
+        "declared_value": {
+          "format": "ttf",
+          "raw": "/assets/fonts/arial.ttf"
+        }
+      },
+      {
+        "assertion_operator": "positive",
+        "assertion_value": "thyme",
+        "id": "branding.typography.main-font",
+        "declared_value": {
+          "format": "ttf",
+          "raw": "/assets/fonts/times-new-roman.ttf"
+        }
+      }
+    ],
+    "dark-mode": [
+      {
+        "assertion_operator": "positive",
+        "assertion_value": "off",
+        "id": "branding.primary-blue",
+        "declared_value": {
+          "format": "hex",
+          "raw": "#007BFF"
+        }
+      }
+    ]
+  }
+}
