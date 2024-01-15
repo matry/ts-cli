@@ -1,7 +1,7 @@
 import React from 'react'
 import {Text} from 'ink'
 import { clearDirectory, listFiles, readUTF8File, writeToJSON } from './utils/filesystem.js'
-import { mergeBundle, parseMatryFile } from './utils/parser.js'
+import { parseMatryFile } from './utils/parser.js'
 
 type Props = {
 	dir: string | undefined
@@ -9,7 +9,10 @@ type Props = {
 
 export default function App({dir = '.'}: Props) {
 	const fileMap = listFiles(dir, {})
-	const bundles = new Array<MatryBundle>()
+	const bundles = new Array()
+
+	clearDirectory('.build')
+
 	Object.entries(fileMap).forEach(([_, fileInfo]) => {
 		const content = readUTF8File(fileInfo, 'matry')
 
@@ -17,6 +20,8 @@ export default function App({dir = '.'}: Props) {
 			try {
 				const parsedContent = parseMatryFile(content)
 				bundles.push(parsedContent)
+
+				writeToJSON('.build', `${fileInfo.name}.json`, bundles)
 			} catch (error: any) {
 				throw new Error(`Compilation error in ${fileInfo.path}
 				${error.message}
@@ -25,17 +30,14 @@ export default function App({dir = '.'}: Props) {
 		}
 	})
 
-	const mergedBundle = bundles.reduce((acc: MatryBundle, bundle: MatryBundle) => {
-		return mergeBundle(acc, bundle)
-	}, {
-		matry_version: '0.0.0',
-		version: '1.0.0', // todo - how to make this dynamic
-		token_declarations: {},
-		token_assignments: {},
-	})
-
-	clearDirectory('.build')
-	writeToJSON('.build', 'bundle.json', mergedBundle)
+	// const mergedBundle = bundles.reduce((acc: MatryBundle, bundle: MatryBundle) => {
+	// 	return mergeBundle(acc, bundle)
+	// }, {
+	// 	matry_version: '0.0.0',
+	// 	version: '1.0.0', // todo - how to make this dynamic
+	// 	token_declarations: {},
+	// 	token_assignments: {},
+	// })
 
 	return (
 		<>

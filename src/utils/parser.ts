@@ -1,23 +1,33 @@
 import Parser, { SyntaxNode, Tree } from 'tree-sitter'
 import Matry from 'tree-sitter-matry'
 import { parseTokenConditionalBlock, parseTokenDeclaration } from './tokens.js'
+import receivers from '../ast/receivers.js'
 
 const parser = new Parser()
 parser.setLanguage(Matry)
 
-export function parseMatryFile(source: string): MatryBundle {
-  const tree: Tree = parser.parse(source)
+function processor(node: SyntaxNode) {
+  const key: string = `${node.type}_node`
+  const receiver = receivers[key]
 
-  const bundle: MatryBundle = {
-    matry_version: '0.0.0',
-    version: '1.0.0', // todo - how to make this dynamic
-    token_declarations: {},
-    token_assignments: {},
+  if (typeof receiver === 'function') {
+    return receiver(node, processor)
   }
 
-  parseNode(tree.rootNode, bundle)
+  return null
+}
 
-  return bundle
+export function parseMatryFile(source: string) {
+  const tree: Tree = parser.parse(source)
+
+  // const bundle: MatryBundle = {
+  //   matry_version: '0.0.0',
+  //   version: '1.0.0', // todo - how to make this dynamic
+  //   token_declarations: {},
+  //   token_assignments: {},
+  // }
+
+  return processor(tree.rootNode)
 }
 
 export function parseNode(node: SyntaxNode, bundle: any): void {

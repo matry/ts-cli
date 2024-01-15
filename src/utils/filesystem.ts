@@ -2,6 +2,7 @@ import fs from 'fs'
 import path from 'path'
 
 interface FileInfo {
+  name: string
   path: string
   type: string
 }
@@ -21,11 +22,16 @@ export function listFiles(dir: string, fileMap: {[key: string]: FileInfo}): {[ke
       listFiles(absolutePath, fileMap)
     } else {
       const fileType = getFileExtension(absolutePath)
-      fileMap[absolutePath] = { path: absolutePath, type: fileType }
+      const fileName = getFileName(absolutePath)
+      fileMap[absolutePath] = { name: fileName, path: absolutePath, type: fileType }
     }
   })
 
   return fileMap
+}
+
+export function getFileName(filePath: string) {
+  return path.basename(filePath).split('.')[0] || 'unknown'
 }
 
 export function readUTF8File(fileInfo: FileInfo, type: string): string | null {
