@@ -3,18 +3,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
-  <style>
-    .box {
-      width: 50px;
-      height: 50px;
-      border: 1px solid black;
-    }
-  </style>
+  <link rel="stylesheet" href="./main.css"></link>
 </head>
 <body>
-  <ul></ul>
+  <div class="box">hello</div>
 
-  <script type="module">
+  <button id="btn" type="button">change theme</button>
+  <p>
+    <strong>theme:</strong>
+    <span id="theme"></span>
+  </p>
+
+  <!-- <script type="module">
     import Color from 'https://colorjs.io/dist/color.js'
 
     let color = new Color('hwb(60 30% 40% / .5)')
@@ -30,6 +30,27 @@
       `
       ul.appendChild(li)
     }
+  </script> -->
+  <script type="module" src="./css-parser.js"></script>
+  <script>
+    let themeIndex = -1
+    const themes = ['default', 'crimson', 'lavender']
+
+    const button = document.querySelector('#btn')
+    button.addEventListener('click', changeTheme)
+
+    function changeTheme() {
+      themeIndex += 1
+      themeIndex = themeIndex >= themes.length ? 0 : themeIndex
+
+      const theme = themes[themeIndex] || themes[0]
+      document.body.setAttribute('data-theme', theme)
+
+      document.getElementById('theme').innerHTML = theme
+    }
+
+    changeTheme()
+
   </script>
 </body>
 </html>

@@ -1,21 +1,21 @@
 import Parser, { SyntaxNode, Tree } from 'tree-sitter'
 import Matry from 'tree-sitter-matry'
 import { parseTokenConditionalBlock, parseTokenDeclaration } from './tokens.js'
-import receivers from '../ast/receivers.js'
+// import receivers from '../ast/receivers.js'
 
 const parser = new Parser()
 parser.setLanguage(Matry)
 
-function processor(node: SyntaxNode) {
-  const key: string = `${node.type}_node`
-  const receiver = receivers[key]
+// function processor(node: SyntaxNode) {
+//   const key: string = `${node.type}_node`
+//   const receiver = receivers[key]
 
-  if (typeof receiver === 'function') {
-    return receiver(node, processor)
-  }
+//   if (typeof receiver === 'function') {
+//     return receiver(node, processor)
+//   }
 
-  return null
-}
+//   return null
+// }
 
 export function parseMatryFile(source: string) {
   const tree: Tree = parser.parse(source)
@@ -27,7 +27,28 @@ export function parseMatryFile(source: string) {
   //   token_assignments: {},
   // }
 
-  return processor(tree.rootNode)
+  function capture(node: SyntaxNode): any {
+    console.log(`capturing down on ${node.type}`)
+
+    if (node.namedChildren.length) {
+      return node.namedChildren.map(capture)
+    }
+  
+    return bubble(node)
+  }
+  
+  function bubble(node: SyntaxNode): any {
+    console.log(`bubbling up on ${node.type}`)
+  
+    if (node.parent) {
+      return bubble(node.parent)
+    }
+  }
+
+  capture(tree.rootNode)
+
+  return {}
+  // return processor(tree.rootNode)
 }
 
 export function parseNode(node: SyntaxNode, bundle: any): void {

@@ -1,0 +1,9 @@
+
+
+.box {
+  width: 250px;
+  height: calc(4em + 3px);
+  border: 1px solid black;
+  background-color: var(--brand-primary-color);
+}
+

@@ -2,6 +2,7 @@ import React from 'react'
 import {Text} from 'ink'
 import { clearDirectory, listFiles, readUTF8File, writeToJSON } from './utils/filesystem.js'
 import { parseMatryFile } from './utils/parser.js'
+// import { SyntaxNode } from 'tree-sitter'
 
 type Props = {
 	dir: string | undefined
