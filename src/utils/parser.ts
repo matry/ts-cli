@@ -1,70 +1,15 @@
-import Parser, { SyntaxNode, Tree } from 'tree-sitter'
+import Parser, { Tree } from 'tree-sitter'
 import Matry from 'tree-sitter-matry'
-import { parseTokenConditionalBlock, parseTokenDeclaration } from './tokens.js'
-// import receivers from '../ast/receivers.js'
+import { Transformer } from '../parser/transformer.js'
 
 const parser = new Parser()
 parser.setLanguage(Matry)
 
-// function processor(node: SyntaxNode) {
-//   const key: string = `${node.type}_node`
-//   const receiver = receivers[key]
-
-//   if (typeof receiver === 'function') {
-//     return receiver(node, processor)
-//   }
-
-//   return null
-// }
-
 export function parseMatryFile(source: string) {
   const tree: Tree = parser.parse(source)
+  const transformer = new Transformer(tree.rootNode)
 
-  // const bundle: MatryBundle = {
-  //   matry_version: '0.0.0',
-  //   version: '1.0.0', // todo - how to make this dynamic
-  //   token_declarations: {},
-  //   token_assignments: {},
-  // }
-
-  function capture(node: SyntaxNode): any {
-    console.log(`capturing down on ${node.type}`)
-
-    if (node.namedChildren.length) {
-      return node.namedChildren.map(capture)
-    }
-  
-    return bubble(node)
-  }
-  
-  function bubble(node: SyntaxNode): any {
-    console.log(`bubbling up on ${node.type}`)
-  
-    if (node.parent) {
-      return bubble(node.parent)
-    }
-  }
-
-  capture(tree.rootNode)
-
-  return {}
-  // return processor(tree.rootNode)
-}
-
-export function parseNode(node: SyntaxNode, bundle: any): void {
-  if (node.type === 'token_declaration') {
-    parseTokenDeclaration(node, bundle)
-  } else if (node.type === 'conditional_token_block') {
-    parseTokenConditionalBlock(node, bundle)
-  } else {
-    for (const child of node.namedChildren) {
-      if (child.type === 'ERROR') { // child.hasError()
-        console.error(`at line ${child.startPosition.row + 1}, column ${child.startPosition.column}`)
-      }
-
-      parseNode(child, bundle)
-    }
-  }
+  return transformer.transform()
 }
 
 export function mergeBundle(bundleA: MatryBundle, bundleB: MatryBundle): MatryBundle {

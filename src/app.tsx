@@ -1,18 +1,17 @@
 import React from 'react'
 import {Text} from 'ink'
 import { clearDirectory, listFiles, readUTF8File, writeToJSON } from './utils/filesystem.js'
-import { parseMatryFile } from './utils/parser.js'
-// import { SyntaxNode } from 'tree-sitter'
+import { mergeBundle, parseMatryFile } from './utils/parser.js'
 
 type Props = {
 	dir: string | undefined
 }
 
 export default function App({dir = '.'}: Props) {
+	clearDirectory('.build')
+
 	const fileMap = listFiles(dir, {})
 	const bundles = new Array()
-
-	clearDirectory('.build')
 
 	Object.entries(fileMap).forEach(([_, fileInfo]) => {
 		const content = readUTF8File(fileInfo, 'matry')
@@ -30,15 +29,6 @@ export default function App({dir = '.'}: Props) {
 			}
 		}
 	})
-
-	// const mergedBundle = bundles.reduce((acc: MatryBundle, bundle: MatryBundle) => {
-	// 	return mergeBundle(acc, bundle)
-	// }, {
-	// 	matry_version: '0.0.0',
-	// 	version: '1.0.0', // todo - how to make this dynamic
-	// 	token_declarations: {},
-	// 	token_assignments: {},
-	// })
 
 	return (
 		<>
