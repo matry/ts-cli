@@ -25,5 +25,4 @@ Backing up, the designer needs to be able to...
 
 1. Create multiple versions of the same tokens, with different parameters passed in. this is what I'm calling a "render."
 2. Automatically generate a page or website that documents the tokens. This should include the expressions (calculations) that were used to create the tokens, along with their default values.
-
-
+3. Render different tokens at runtime, due to either environmental assertions on page load, or to changes in application state.

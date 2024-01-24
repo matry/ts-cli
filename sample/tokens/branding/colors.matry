@@ -1,0 +1,24 @@
+
+tokens colors {
+  color verdant-100: #0A2F51
+  color verdant-200: #0E4D64
+  color verdant-300: #137177
+  color verdant-400: #188977
+  color verdant-500: #1D9A6C
+  color verdant-600: #39A96B
+  color verdant-700: #56B870
+  color verdant-800: #74C67A
+  color verdant-900: #99D492
+
+  when $dark-mode is on {
+    verdant-100: #0A2F51
+    verdant-200: #0E4D64
+    verdant-300: #137177
+    verdant-400: #188977
+    verdant-500: #1D9A6C
+    verdant-600: #39A96B
+    verdant-700: #56B870
+    verdant-800: #74C67A
+    verdant-900: #99D492
+  }
+}

@@ -1,12 +1,17 @@
-import { SyntaxNode } from 'tree-sitter'
+import Parser, { SyntaxNode, Tree } from 'tree-sitter'
+import Matry from 'tree-sitter-matry'
 
 export class Transformer {
-  root: SyntaxNode
+  ast: Tree
   output: any
 
-  constructor(root: SyntaxNode) {
-    this.root = root
+  constructor(source: string) {
+    const parser = new Parser()
+    parser.setLanguage(Matry)
+
+    this.ast = parser.parse(source)
     this.output = {
+      token_variants: {},
       token_declarations: {},
       token_overrides: {},
     }
@@ -172,7 +177,13 @@ export class Transformer {
             this.parseArithmetic(childNode)
           )
           break
+        case 'dimension':
+          subExpressions.push(
+            this.parseDimension(childNode)
+          )
+          break
         default:
+          console.warn(`found uncaptured expression type: ${childNode.type}`)
           break
       }
     }
@@ -275,6 +286,44 @@ export class Transformer {
     }
   }
 
+  private parseBase(node: SyntaxNode) {
+    const switchNode = this.findChild(node, 'switch')!
+
+    const values: any = []
+
+    for (const childNode of switchNode.namedChildren) {
+      if (childNode.type === 'id') {
+        const value = {
+          id: childNode.text,
+          isDefault: switchNode.nextNamedSibling?.type === 'asterisk',
+        }
+        values.push(value)
+      }
+    }
+
+    return values
+  }
+
+  private parseVar(node: SyntaxNode) {
+    const typeNode = this.findChild(node, 'type')!
+    const idNode = this.findChild(node, 'id')!
+    const baseNode = this.findChild(node, 'base')!
+
+    this.output.token_variants[idNode.text] = {
+      type: typeNode.text,
+      name: idNode.text,
+      value: this.parseBase(baseNode),
+    }
+  }
+
+  private parseVariants(node: SyntaxNode) {
+    for (const childNode of node.namedChildren) {
+      if (childNode.type === 'var') {
+        this.parseVar(childNode)
+      }
+    }
+  }
+
   private getPath(node: SyntaxNode, accumulator: string[] = []): string {
     let idNode = null
     switch (node.type) {
@@ -317,6 +366,9 @@ export class Transformer {
       case 'cond':
         this.parseConditional(node)
         break
+      case 'variants':
+        this.parseVariants(node)
+        break
       default:
         break
     }
@@ -327,7 +379,7 @@ export class Transformer {
   }
 
   public transform() {
-    this.processNode(this.root)
+    this.processNode(this.ast.rootNode)
     return this.output
   }
 }
