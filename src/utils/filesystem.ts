@@ -7,6 +7,10 @@ interface FileInfo {
   type: string
 }
 
+export function getMatryfile(dir: string) {
+  return fs.readFileSync(path.join(dir, 'matry'))
+}
+
 function getFileExtension(filePath: string): string {
   return path.extname(filePath).slice(1)
 }

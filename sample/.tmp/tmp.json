@@ -1,0 +1,532 @@
+{
+  "token_variants": {
+    "mode": {
+      "type": "switch",
+      "name": "mode",
+      "value": [
+        {
+          "id": "light",
+          "isDefault": false
+        },
+        {
+          "id": "dark",
+          "isDefault": false
+        }
+      ]
+    }
+  },
+  "token_declarations": {
+    "colors.verdant-100": {
+      "type": "color",
+      "name": "verdant-100",
+      "path": "colors.verdant-100",
+      "expression": [
+        {
+          "type": "hex",
+          "value": "#0A2F51"
+        }
+      ]
+    },
+    "colors.verdant-200": {
+      "type": "color",
+      "name": "verdant-200",
+      "path": "colors.verdant-200",
+      "expression": [
+        {
+          "type": "hex",
+          "value": "#0E4D64"
+        }
+      ]
+    },
+    "colors.verdant-300": {
+      "type": "color",
+      "name": "verdant-300",
+      "path": "colors.verdant-300",
+      "expression": [
+        {
+          "type": "hex",
+          "value": "#137177"
+        }
+      ]
+    },
+    "colors.verdant-400": {
+      "type": "color",
+      "name": "verdant-400",
+      "path": "colors.verdant-400",
+      "expression": [
+        {
+          "type": "hex",
+          "value": "#188977"
+        }
+      ]
+    },
+    "colors.verdant-500": {
+      "type": "color",
+      "name": "verdant-500",
+      "path": "colors.verdant-500",
+      "expression": [
+        {
+          "type": "hex",
+          "value": "#1D9A6C"
+        }
+      ]
+    },
+    "colors.verdant-600": {
+      "type": "color",
+      "name": "verdant-600",
+      "path": "colors.verdant-600",
+      "expression": [
+        {
+          "type": "hex",
+          "value": "#39A96B"
+        }
+      ]
+    },
+    "colors.verdant-700": {
+      "type": "color",
+      "name": "verdant-700",
+      "path": "colors.verdant-700",
+      "expression": [
+        {
+          "type": "hex",
+          "value": "#56B870"
+        }
+      ]
+    },
+    "colors.verdant-800": {
+      "type": "color",
+      "name": "verdant-800",
+      "path": "colors.verdant-800",
+      "expression": [
+        {
+          "type": "hex",
+          "value": "#74C67A"
+        }
+      ]
+    },
+    "colors.verdant-900": {
+      "type": "color",
+      "name": "verdant-900",
+      "path": "colors.verdant-900",
+      "expression": [
+        {
+          "type": "hex",
+          "value": "#99D492"
+        }
+      ]
+    },
+    "typography.base": {
+      "type": "dimension",
+      "name": "base",
+      "path": "typography.base",
+      "expression": [
+        {
+          "type": "px",
+          "value": "10"
+        }
+      ]
+    },
+    "typography.large": {
+      "type": "dimension",
+      "name": "large",
+      "path": "typography.large",
+      "expression": [
+        {
+          "type": "px",
+          "value": "14"
+        }
+      ]
+    },
+    "typography.x-large": {
+      "type": "dimension",
+      "name": "x-large",
+      "path": "typography.x-large",
+      "expression": [
+        {
+          "type": "px",
+          "value": "18"
+        }
+      ]
+    },
+    "shadows.main-shadow.shadow-x": {
+      "type": "dimension",
+      "name": "shadow-x",
+      "path": "shadows.main-shadow.shadow-x",
+      "expression": [
+        {
+          "type": "px",
+          "value": "1"
+        }
+      ]
+    },
+    "shadows.main-shadow.shadow-y": {
+      "type": "dimension",
+      "name": "shadow-y",
+      "path": "shadows.main-shadow.shadow-y",
+      "expression": [
+        {
+          "type": "px",
+          "value": "1"
+        }
+      ]
+    },
+    "shadows.main-shadow.shadow-blur": {
+      "type": "dimension",
+      "name": "shadow-blur",
+      "path": "shadows.main-shadow.shadow-blur",
+      "expression": [
+        {
+          "type": "px",
+          "value": "3"
+        }
+      ]
+    },
+    "shadows.main-shadow.shadow-spread": {
+      "type": "dimension",
+      "name": "shadow-spread",
+      "path": "shadows.main-shadow.shadow-spread",
+      "expression": [
+        {
+          "type": "px",
+          "value": "5"
+        }
+      ]
+    },
+    "shadows.main-shadow.shadow-color": {
+      "type": "color",
+      "name": "shadow-color",
+      "path": "shadows.main-shadow.shadow-color",
+      "expression": [
+        {
+          "type": "hex",
+          "value": "#007bff"
+        }
+      ]
+    },
+    "colors.green-100": {
+      "type": "color",
+      "name": "green-100",
+      "path": "colors.green-100",
+      "expression": [
+        {
+          "type": "hex",
+          "value": "#0A2F51"
+        }
+      ]
+    },
+    "colors.green-200": {
+      "type": "color",
+      "name": "green-200",
+      "path": "colors.green-200",
+      "expression": [
+        {
+          "type": "hex",
+          "value": "#0E4D64"
+        }
+      ]
+    },
+    "colors.green-300": {
+      "type": "color",
+      "name": "green-300",
+      "path": "colors.green-300",
+      "expression": [
+        {
+          "type": "hex",
+          "value": "#137177"
+        }
+      ]
+    },
+    "colors.green-400": {
+      "type": "color",
+      "name": "green-400",
+      "path": "colors.green-400",
+      "expression": [
+        {
+          "type": "hex",
+          "value": "#188977"
+        }
+      ]
+    },
+    "colors.green-500": {
+      "type": "color",
+      "name": "green-500",
+      "path": "colors.green-500",
+      "expression": [
+        {
+          "type": "hex",
+          "value": "#1D9A6C"
+        }
+      ]
+    },
+    "colors.green-600": {
+      "type": "color",
+      "name": "green-600",
+      "path": "colors.green-600",
+      "expression": [
+        {
+          "type": "hex",
+          "value": "#39A96B"
+        }
+      ]
+    },
+    "colors.green-700": {
+      "type": "color",
+      "name": "green-700",
+      "path": "colors.green-700",
+      "expression": [
+        {
+          "type": "hex",
+          "value": "#56B870"
+        }
+      ]
+    },
+    "colors.green-800": {
+      "type": "color",
+      "name": "green-800",
+      "path": "colors.green-800",
+      "expression": [
+        {
+          "type": "hex",
+          "value": "#74C67A"
+        }
+      ]
+    },
+    "colors.green-900": {
+      "type": "color",
+      "name": "green-900",
+      "path": "colors.green-900",
+      "expression": [
+        {
+          "type": "hex",
+          "value": "#99D492"
+        }
+      ]
+    }
+  },
+  "token_overrides": {
+    "colors": {
+      "dark-mode": [
+        {
+          "assertion": {
+            "type": "func",
+            "method": "bool",
+            "parameters": [
+              {
+                "type": "ref",
+                "value": "dark-mode"
+              },
+              {
+                "type": "operator",
+                "value": true
+              },
+              "on"
+            ]
+          },
+          "sets": [
+            {
+              "name": "verdant-100",
+              "path": "colors.verdant-100",
+              "expression": [
+                {
+                  "type": "hex",
+                  "value": "#0A2F51"
+                }
+              ]
+            },
+            {
+              "name": "verdant-200",
+              "path": "colors.verdant-200",
+              "expression": [
+                {
+                  "type": "hex",
+                  "value": "#0E4D64"
+                }
+              ]
+            },
+            {
+              "name": "verdant-300",
+              "path": "colors.verdant-300",
+              "expression": [
+                {
+                  "type": "hex",
+                  "value": "#137177"
+                }
+              ]
+            },
+            {
+              "name": "verdant-400",
+              "path": "colors.verdant-400",
+              "expression": [
+                {
+                  "type": "hex",
+                  "value": "#188977"
+                }
+              ]
+            },
+            {
+              "name": "verdant-500",
+              "path": "colors.verdant-500",
+              "expression": [
+                {
+                  "type": "hex",
+                  "value": "#1D9A6C"
+                }
+              ]
+            },
+            {
+              "name": "verdant-600",
+              "path": "colors.verdant-600",
+              "expression": [
+                {
+                  "type": "hex",
+                  "value": "#39A96B"
+                }
+              ]
+            },
+            {
+              "name": "verdant-700",
+              "path": "colors.verdant-700",
+              "expression": [
+                {
+                  "type": "hex",
+                  "value": "#56B870"
+                }
+              ]
+            },
+            {
+              "name": "verdant-800",
+              "path": "colors.verdant-800",
+              "expression": [
+                {
+                  "type": "hex",
+                  "value": "#74C67A"
+                }
+              ]
+            },
+            {
+              "name": "verdant-900",
+              "path": "colors.verdant-900",
+              "expression": [
+                {
+                  "type": "hex",
+                  "value": "#99D492"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "mode": [
+        {
+          "assertion": {
+            "type": "func",
+            "method": "bool",
+            "parameters": [
+              {
+                "type": "ref",
+                "value": "mode"
+              },
+              {
+                "type": "operator",
+                "value": true
+              },
+              "dark"
+            ]
+          },
+          "sets": [
+            {
+              "name": "green-100",
+              "path": "colors.green-100",
+              "expression": [
+                {
+                  "type": "hex",
+                  "value": "#5A7D73"
+                }
+              ]
+            },
+            {
+              "name": "green-200",
+              "path": "colors.green-200",
+              "expression": [
+                {
+                  "type": "hex",
+                  "value": "#719B87"
+                }
+              ]
+            },
+            {
+              "name": "green-300",
+              "path": "colors.green-300",
+              "expression": [
+                {
+                  "type": "hex",
+                  "value": "#88B998"
+                }
+              ]
+            },
+            {
+              "name": "green-400",
+              "path": "colors.green-400",
+              "expression": [
+                {
+                  "type": "hex",
+                  "value": "#A0D7A6"
+                }
+              ]
+            },
+            {
+              "name": "green-500",
+              "path": "colors.green-500",
+              "expression": [
+                {
+                  "type": "hex",
+                  "value": "#BFF5B8"
+                }
+              ]
+            },
+            {
+              "name": "green-600",
+              "path": "colors.green-600",
+              "expression": [
+                {
+                  "type": "hex",
+                  "value": "#D1F7C1"
+                }
+              ]
+            },
+            {
+              "name": "green-700",
+              "path": "colors.green-700",
+              "expression": [
+                {
+                  "type": "hex",
+                  "value": "#E1F9C9"
+                }
+              ]
+            },
+            {
+              "name": "green-800",
+              "path": "colors.green-800",
+              "expression": [
+                {
+                  "type": "hex",
+                  "value": "#EEFBD3"
+                }
+              ]
+            },
+            {
+              "name": "green-900",
+              "path": "colors.green-900",
+              "expression": [
+                {
+                  "type": "hex",
+                  "value": "#F8FCDC"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

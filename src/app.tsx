@@ -1,6 +1,6 @@
 import React from 'react'
 import {Text} from 'ink'
-import { clearDirectory, listFiles, readUTF8File, writeToJSON } from './utils/filesystem.js'
+import { clearDirectory, getMatryfile, listFiles, readUTF8File, writeToJSON } from './utils/filesystem.js'
 import { Transformer } from './parser/transformer.js'
 
 type Props = {
@@ -8,7 +8,17 @@ type Props = {
 }
 
 export default function App({dir = '.'}: Props) {
-	clearDirectory('.build')
+	const matryfile = getMatryfile(dir)
+
+	console.log('mstryfiel')
+	console.log(matryfile)
+
+	if (!matryfile) {
+		console.error('No Matryfile found')
+		return null
+	}
+
+	clearDirectory('.tmp')
 
 	const fileMap = listFiles(dir, {})
 
@@ -27,7 +37,7 @@ export default function App({dir = '.'}: Props) {
 		const transformer = new Transformer(concatFiles)
 		const parsedContent = transformer.transform()
 
-		writeToJSON('.build', `bundle.json`, parsedContent)
+		writeToJSON('.tmp', 'tmp.json', parsedContent)
 	} catch (error: any) {
 		throw new Error(`Compilation error:
 		${error.message}
