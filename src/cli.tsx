@@ -7,7 +7,11 @@ import App from './app.js'
 const cli = meow(
 	`
 	Usage
-	  $ ts-cli
+	  $ ts-cli <cmd>
+
+	Commands
+		build
+		render
 
 	Options
 		--dir  The target directory
@@ -26,4 +30,4 @@ const cli = meow(
 	},
 )
 
-render(<App dir={cli.flags.dir} />)
+render(<App input={cli.input} dir={cli.flags.dir} />)

@@ -1,47 +1,29 @@
 import React from 'react'
 import {Text} from 'ink'
-import { clearDirectory, getMatryfile, listFiles, readUTF8File, writeToJSON } from './utils/filesystem.js'
-import { Transformer } from './parser/transformer.js'
+import { build } from './utils/build.js'
 
 type Props = {
+	input: string[]
 	dir: string | undefined
 }
 
-export default function App({dir = '.'}: Props) {
-	const matryfile = getMatryfile(dir)
+export default function App({ dir = '.' , input = []}: Props) {
+	const cmd = input[0] || ''
 
-	console.log('mstryfiel')
-	console.log(matryfile)
+	console.log(`received cmd ${cmd}`)
 
-	if (!matryfile) {
-		console.error('No Matryfile found')
-		return null
+	let output = null
+
+	switch (cmd) {
+		case 'build':
+			build(dir)
+			break
+		default:
+			break
 	}
 
-	clearDirectory('.tmp')
+	if (output === null) {
 
-	const fileMap = listFiles(dir, {})
-
-	let concatFiles = ''
-
-	Object.entries(fileMap).forEach(([_, fileInfo]) => {
-		const content = readUTF8File(fileInfo, 'matry')
-
-		if (content && typeof content === 'string') {
-			concatFiles += '\n'
-			concatFiles += content
-		}
-	})
-
-	try {
-		const transformer = new Transformer(concatFiles)
-		const parsedContent = transformer.transform()
-
-		writeToJSON('.tmp', 'tmp.json', parsedContent)
-	} catch (error: any) {
-		throw new Error(`Compilation error:
-		${error.message}
-		`)
 	}
 
 	return (
