@@ -11,6 +11,22 @@ export function getMatryfile(dir: string) {
   return fs.readFileSync(path.join(dir, 'matry'))
 }
 
+export function getMatryProject(rootDir: string): string {
+  const fileMap = listFiles(rootDir, {})
+
+	let concatFiles = ''
+	Object.entries(fileMap).forEach(([_, fileInfo]) => {
+		const content = readUTF8File(fileInfo, 'matry')
+
+		if (content && typeof content === 'string') {
+			concatFiles += '\n'
+			concatFiles += content
+		}
+	})
+
+  return concatFiles
+}
+
 function getFileExtension(filePath: string): string {
   return path.extname(filePath).slice(1)
 }

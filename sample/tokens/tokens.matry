@@ -4,26 +4,14 @@ variants {
 }
 
 tokens colors {
+  color other-color: rgb(255, 255, 255)
   color green-100: #0A2F51
   color green-200: #0E4D64
   color green-300: #137177
-  color green-400: #188977
-  color green-500: #1D9A6C
-  color green-600: #39A96B
-  color green-700: #56B870
-  color green-800: #74C67A
-  color green-900: #99D492
 
   when $mode is dark {
     green-100: #5A7D73
     green-200: #719B87
     green-300: #88B998
-    green-400: #A0D7A6
-    green-500: #BFF5B8
-    green-600: #D1F7C1
-    green-700: #E1F9C9
-    green-800: #EEFBD3
-    green-900: #F8FCDC
   }
 }
-

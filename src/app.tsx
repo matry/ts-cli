@@ -1,6 +1,8 @@
 import React from 'react'
 import {Text} from 'ink'
-import { build } from './utils/build.js'
+import { parse, writeToDisk } from './utils/controller.js'
+import { clearDirectory } from './utils/filesystem.js'
+import { Renderer } from './parser/renderer.js'
 
 type Props = {
 	input: string[]
@@ -9,21 +11,23 @@ type Props = {
 
 export default function App({ dir = '.' , input = []}: Props) {
 	const cmd = input[0] || ''
-
 	console.log(`received cmd ${cmd}`)
-
-	let output = null
 
 	switch (cmd) {
 		case 'build':
-			build(dir)
+			clearDirectory('.tmp')
+			const content = parse(dir)
+
+			const renderer = new Renderer(content)
+			renderer.render()
+
+			console.log('output')
+			console.log(renderer.output)
+
+			writeToDisk(content)
 			break
 		default:
 			break
-	}
-
-	if (output === null) {
-
 	}
 
 	return (
