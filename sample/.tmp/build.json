@@ -1,16 +1,20 @@
 {
   "token_variants": {
-    "dark-mode": {
+    "theme": {
       "type": "switch",
-      "name": "dark-mode",
+      "name": "theme",
       "values": [
         {
-          "value": "on",
+          "value": "lavender",
           "is_default": false
         },
         {
-          "value": "off",
+          "value": "rosemary",
           "is_default": true
+        },
+        {
+          "value": "thyme",
+          "is_default": false
         }
       ]
     }
@@ -93,5 +97,52 @@
       ]
     }
   },
-  "token_overrides": {}
+  "token_overrides": {
+    "theme": [
+      {
+        "assertion": {
+          "method": "EQ",
+          "return_type": "BOOL",
+          "parameters": [
+            {
+              "method": "REF",
+              "return_type": "TEXT",
+              "parameters": [
+                "theme"
+              ]
+            },
+            "lavender"
+          ]
+        },
+        "overrides": [
+          {
+            "name": "main-color",
+            "path": "brand.main-color",
+            "expression": [
+              {
+                "method": "IDENTITY",
+                "return_type": "COLOR",
+                "parameters": [
+                  "#BADA55"
+                ]
+              }
+            ]
+          },
+          {
+            "name": "secondary-color",
+            "path": "brand.secondary-color",
+            "expression": [
+              {
+                "method": "IDENTITY",
+                "return_type": "COLOR",
+                "parameters": [
+                  "#123456"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
 }

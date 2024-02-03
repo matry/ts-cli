@@ -10,21 +10,14 @@ export class Renderer {
 
   render(parameters: {[key:string]:any}) {
     this.resolve_token_variants(parameters)
+    this.resolve_token_declarations(this.data.token_declarations)
+    this.resolve_token_overrides()
 
-    for (const k in this.data) {
-      switch (k) {
-        case 'token_declarations':
-          this.resolve_token_declarations(this.data[k])
-          break
-        default:
-          break
-      }
-    }
-
-    if (this.resolve_count > 0) {
-      this.resolve_count = 0
-      this.render(parameters)
-    }
+    // TODO: remove once infinite loop is fixed
+    // if (this.resolve_count > 0) {
+    //   this.resolve_count = 0
+    //   this.render(parameters)
+    // }
   }
 
   resolve_token_variants(parameters: {[key:string]:any}) {
@@ -61,6 +54,30 @@ export class Renderer {
     }
 
     this.output[declaration.path] = this.resolve_expression(expression)
+  }
+
+  resolve_token_overrides() {
+    for (const key in this.data.token_overrides) {
+      for (const definition of this.data.token_overrides[key]) {
+        const variantKey = definition.assertion.parameters[0].parameters[0]
+        const value = definition.assertion.parameters[1]
+        const method = definition.assertion.method
+
+        let shouldApply = false
+
+        if (method === Method.Eq) {
+          shouldApply = this.output[variantKey] === value
+        } else if (method === Method.Neq) {
+          shouldApply = this.output[variantKey] !== value
+        }
+
+        if (shouldApply) {
+          for (const override of definition.overrides) {
+            this.output[override.path] = this.resolve_expression(override.expression)
+          }
+        }
+      }
+    }
   }
 
   resolve_expression(expression: any) {

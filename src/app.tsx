@@ -28,7 +28,7 @@ export default function App({ dir = '.' , input = []}: Props) {
 
 			const renderer = new Renderer(builder.output) // transform build into render tree
 			renderer.render({
-				'dark-mode': 'on',
+				'theme': 'rosemary',
 			})
 			writeTempFile('render', renderer.output)
 

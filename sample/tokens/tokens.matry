@@ -1,7 +1,6 @@
 
 variants {
-  switch dark-mode: on, off*
-  // color base-color: #BADA55
+  switch theme: lavender, rosemary*, thyme
 }
 
 tokens brand {
@@ -9,4 +8,9 @@ tokens brand {
   color secondary-color: #007BFF
   text btn-copy: "Hello World"
   asset bg-image: /assets/background.png
+
+  when $theme is lavender {
+    main-color: #BADA55
+    secondary-color: #123456
+  }
 }

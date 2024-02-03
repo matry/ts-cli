@@ -1,5 +1,5 @@
 {
-  "dark-mode": "on",
+  "theme": "rosemary",
   "brand.main-color": "rgba(255,255,255,1.0)",
   "brand.secondary-color": "#007BFF",
   "brand.btn-copy": "Hello World",
