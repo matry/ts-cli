@@ -42,12 +42,8 @@ function produceAssignments(data) {
   const ruleSets = []
 
   Object.entries(data.assignments).forEach(([variantKey, variantAssignments]) => {
-    console.log(`k: ${variantKey}`)
     Object.entries(variantAssignments).forEach(([variantValue, assignments]) => {
-      console.log(`v: ${variantValue}`)
-      console.log(assignments)
       const lines = produceLines(assignments)
-      console.log(lines)
       ruleSets.push(
         producePropertiesString(
           lines,
@@ -64,9 +60,6 @@ export function produceCustomProperties(data) {
   const declarations = produceDeclarations(data)
   const assignments = produceAssignments(data)
 
-  console.log('ass')
-  console.log(assignments)
-
   return [
     producePropertiesString(declarations),
     ...assignments,
@@ -74,8 +67,6 @@ export function produceCustomProperties(data) {
 }
 
 const cssString = produceCustomProperties(sample_data)
-
-console.log(cssString)
 
 const styleSheet = document.createElement('style')
 styleSheet.textContent = cssString

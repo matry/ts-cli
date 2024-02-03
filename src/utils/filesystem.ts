@@ -81,3 +81,8 @@ export function writeToJSON(dir: string, fileName: string, data: any) {
   const absolutePath = path.join(process.cwd(), dir, fileName)
   fs.writeFileSync(absolutePath, JSON.stringify(data, null, 2))
 }
+
+export function writeToText(dir: string, fileName: string, data: string) {
+  const absolutePath = path.join(process.cwd(), dir, fileName)
+  fs.writeFileSync(absolutePath, data)
+}

@@ -1,10 +1,11 @@
 import React from 'react'
 import {Text} from 'ink'
-import { writeTempFile } from './utils/controller.js'
+import { writeCSSFile, writeTempFile } from './utils/controller.js'
 import { clearDirectory, getMatryProject } from './utils/filesystem.js'
 import { Renderer } from './parser/renderer.js'
 import './test/color-functions.js'
 import { Builder } from './parser/builder.js'
+import { Bundler } from './parser/bundler.js'
 
 type Props = {
 	input: string[]
@@ -19,6 +20,7 @@ export default function App({ dir = '.' , input = []}: Props) {
 	switch (cmd) {
 		case 'build':
 			clearDirectory('.tmp')
+			clearDirectory('bundle')
 
 			const files = getMatryProject(dir) // transform directory into matry files
 			const builder = new Builder(files)
@@ -31,6 +33,10 @@ export default function App({ dir = '.' , input = []}: Props) {
 				'theme': 'rosemary',
 			})
 			writeTempFile('render', renderer.output)
+
+			const bundler = new Bundler(renderer.output)
+			bundler.bundle()
+			writeCSSFile('vars', bundler.output)
 
 			break
 		default:
