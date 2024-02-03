@@ -1,17 +1,12 @@
 
 variants {
-  switch mode: light*, dark
+  switch dark-mode: on, off*
+  // color base-color: #BADA55
 }
 
-tokens colors {
-  color other-color: rgb(255, 255, 255)
-  color green-100: #0A2F51
-  color green-200: #0E4D64
-  color green-300: #137177
-
-  when $mode is dark {
-    green-100: #5A7D73
-    green-200: #719B87
-    green-300: #88B998
-  }
+tokens brand {
+  color main-color: rgb(255, 255, 255)
+  color secondary-color: #007BFF
+  text btn-copy: "Hello World"
+  asset bg-image: /assets/background.png
 }

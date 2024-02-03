@@ -1,7 +1,7 @@
 import Parser, { SyntaxNode, Tree } from 'tree-sitter'
 import Matry from 'tree-sitter-matry'
 
-export class Transformer {
+export class Builder {
   ast: Tree
   output: any
 
@@ -17,36 +17,50 @@ export class Transformer {
     }
   }
 
-  private parseNum(node: SyntaxNode) {
-    return node.text
+  public build() {
+    this.processNode(this.ast.rootNode)
   }
 
-  private parseOp(node: SyntaxNode) {
-    let value = ''
+  private parseNum(node: SyntaxNode): FunctionExpression {
+    return {
+      method: Method.Identity,
+      return_type: ValueType.Number,
+      parameters: [node.text],
+    }
+  }
+
+  private parseStr(node: SyntaxNode): FunctionExpression {
+    return {
+      method: Method.Identity,
+      return_type: ValueType.Text,
+      parameters: [node.text],
+    }
+  }
+
+  private parseAsset(node: SyntaxNode): FunctionExpression {
+    return {
+      method: Method.Identity,
+      return_type: ValueType.Text,
+      parameters: [node.text],
+    }
+  }
+
+  private parseOp(node: SyntaxNode): ArithmeticOperator {
     switch (node.text) {
       case '*':
-        value = 'mult'
-        break
+        return ArithmeticOperator.Mult
       case '+':
-        value = 'sum'
-        break
+        return ArithmeticOperator.Sum
       case '-':
-        value = 'sub'
-        break
+        return ArithmeticOperator.Sub
       case '%':
-        value = 'mod'
-        break
+        return ArithmeticOperator.Mod
       default:
-        break
-    }
-
-    return {
-      type: 'operator',
-      value,
+        return ArithmeticOperator.Sum
     }
   }
 
-  private parseArithmetic(node: SyntaxNode) {
+  private parseArithmetic(node: SyntaxNode): FunctionExpression {
     const parameters = []
 
     for (const childNode of node.namedChildren) {
@@ -78,33 +92,36 @@ export class Transformer {
     }
 
     return {
-      type: 'func',
-      method: 'arithmetic',
+      method: Method.Arithmetic,
+      return_type: ValueType.Number,
       parameters,
     }
   }
 
-  private parseHex(node: SyntaxNode) {
+  private parseHex(node: SyntaxNode): FunctionExpression {
     return {
-      type: 'hex',
-      value: node.text,
+      method: Method.Identity,
+      return_type: ValueType.Color,
+      parameters: [node.text],
     }
   }
 
-  private parseRef(node: SyntaxNode) {
+  private parseRef(node: SyntaxNode): FunctionExpression {
     return {
-      type: 'ref',
-      value: node.text,
+      method: Method.Ref,
+      return_type: ValueType.Text,
+      parameters: [node.text],
     }
   }
 
-  private parseDimension(node: SyntaxNode) {
+  private parseDimension(node: SyntaxNode): FunctionExpression {
     const numNode = this.findChild(node, 'num')!
     const unitNode = this.findChild(node, 'unit')!
 
     return {
-      type: unitNode.text,
-      value: numNode.text,
+      method: Method.Dimension,
+      return_type: ValueType.Number,
+      parameters: [numNode.text, unitNode.text],
     }
   }
 
@@ -139,17 +156,35 @@ export class Transformer {
     return params
   }
 
-  private parseFunc(node: SyntaxNode) {
+  private parseFunc(node: SyntaxNode): FunctionExpression {
     const funcIdNode = this.findChild(node, 'func_id')!
     const paramsNode = this.findChild(node, 'params')!
 
-    const func = {
-      type: 'func',
-      method: funcIdNode.text,
-      parameters: this.parseParams(paramsNode),
+    let method = null
+
+    switch (funcIdNode.text) {
+      case 'rgb':
+        method = Method.Rgb
+        break
+      case 'hex':
+        method = Method.Identity
+        break
+      case 'darken':
+        method = Method.Darken
+        break
+      case 'lighten':
+        method = Method.Lighten
+        break
+      default:
+        method = Method.Identity
+        break
     }
 
-    return func
+    return {
+      method,
+      return_type: ValueType.Color, // currently this is the only func type supported
+      parameters: this.parseParams(paramsNode),
+    }
   }
 
   private parseExpression(node: SyntaxNode) {
@@ -182,6 +217,16 @@ export class Transformer {
             this.parseDimension(childNode)
           )
           break
+        case 'str':
+          subExpressions.push(
+            this.parseStr(childNode)
+          )
+          break
+        case 'asset':
+          subExpressions.push(
+            this.parseAsset(childNode)
+          )
+          break
         default:
           console.warn(`found uncaptured expression type: ${childNode.type}`)
           break
@@ -191,38 +236,31 @@ export class Transformer {
     return subExpressions
   }
 
-  private parseBool(node: SyntaxNode) {
+  private parseBool(node: SyntaxNode): FunctionExpression {
     const condNode = node.closest('cond')!
     const refNode = this.findChild(condNode, 'ref')!
 
     const posNode = this.findChild(node, 'pos')
     const negNode = this.findChild(node, 'neg')
 
-    const operator = {
-      type: 'operator',
-      value: true,
-    }
-
-    if (posNode && !negNode) {
-      operator.value = true
-    } else if (negNode && !posNode) {
-      operator.value = false
+    let operatorMethod = Method.Eq
+    if (negNode && !posNode) {
+      operatorMethod = Method.Neq
     }
 
     const idNode = this.findChild(node, 'id')!
 
     return {
-      type: 'func',
-      method: 'bool',
+      method: operatorMethod,
+      return_type: ValueType.Bool,
       parameters: [
         this.parseRef(refNode),
-        operator,
         idNode.text,
       ],
     }
   }
 
-  private parseSet(node: SyntaxNode) {
+  private parseOverride(node: SyntaxNode) {
     const path = this.getPath(node)
     const idNode = this.findChild(node, 'set_id')!
     const expNode = this.findChild(node, 'exp')!
@@ -237,38 +275,35 @@ export class Transformer {
   private parseAssertion(node: SyntaxNode) {
     const boolNode = this.findChild(node, 'bool')!
 
-    const sets = []
+    const overrides = []
     for (const childNode of node.namedChildren) {
       if (childNode.type === 'set') {
-        sets.push(this.parseSet(childNode))
+        overrides.push(this.parseOverride(childNode))
       }
     }
 
     return {
       assertion: this.parseBool(boolNode),
-      sets,
+      overrides,
     }
   }
 
   private parseConditional(node: SyntaxNode) {
-    const path = this.getPath(node)!
+    // const path = this.getPath(node)!
     const refNode = this.findChild(node, 'ref')!
 
-    this.output.token_overrides[path] = this.output.token_overrides[path] || {}
+    this.output.token_overrides[refNode.text] = this.output.token_overrides[refNode.text] || []
 
-    const assertions = []
     for (const childNode of node.namedChildren) {
       if (childNode.type === 'assertion') {
-        assertions.push(
+        this.output.token_overrides[refNode.text].push(
           this.parseAssertion(childNode)
         )
       }
     }
-
-    this.output.token_overrides[path][refNode.text] = this.output.token_overrides[path][refNode.text] || assertions
   }
 
-  private parseDefinition(node: SyntaxNode) {
+  private parseDefinition(node: SyntaxNode): void {
     const path = this.getPath(node)
     const typeNode = this.findChild(node, 'type')!
     const idNode = this.findChild(node, 'def_id')!
@@ -286,7 +321,7 @@ export class Transformer {
     }
   }
 
-  private parseBase(node: SyntaxNode) {
+  private parseVariantValues(node: SyntaxNode) {
     const switchNode = this.findChild(node, 'switch')!
 
     const values: any = []
@@ -294,8 +329,8 @@ export class Transformer {
     for (const childNode of switchNode.namedChildren) {
       if (childNode.type === 'id') {
         const value = {
-          id: childNode.text,
-          isDefault: switchNode.nextNamedSibling?.type === 'asterisk',
+          value: childNode.text,
+          is_default: childNode.nextNamedSibling?.type === 'asterisk',
         }
         values.push(value)
       }
@@ -304,22 +339,22 @@ export class Transformer {
     return values
   }
 
-  private parseVar(node: SyntaxNode) {
+  private parseVariant(node: SyntaxNode) {
     const typeNode = this.findChild(node, 'type')!
     const idNode = this.findChild(node, 'id')!
-    const baseNode = this.findChild(node, 'base')!
+    const initialNode = this.findChild(node, 'initial')!
 
     this.output.token_variants[idNode.text] = {
       type: typeNode.text,
       name: idNode.text,
-      value: this.parseBase(baseNode),
+      values: this.parseVariantValues(initialNode),
     }
   }
 
   private parseVariants(node: SyntaxNode) {
     for (const childNode of node.namedChildren) {
       if (childNode.type === 'var') {
-        this.parseVar(childNode)
+        this.parseVariant(childNode)
       }
     }
   }
@@ -376,10 +411,5 @@ export class Transformer {
     for (const childNode of node.namedChildren) {
       this.processNode(childNode)
     }
-  }
-
-  public transform() {
-    this.processNode(this.ast.rootNode)
-    return this.output
   }
 }

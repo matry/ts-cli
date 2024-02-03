@@ -8,7 +8,9 @@ export class Renderer {
     this.data = data
   }
 
-  render() {
+  render(parameters: {[key:string]:any}) {
+    this.resolve_token_variants(parameters)
+
     for (const k in this.data) {
       switch (k) {
         case 'token_declarations':
@@ -21,7 +23,27 @@ export class Renderer {
 
     if (this.resolve_count > 0) {
       this.resolve_count = 0
-      this.render()
+      this.render(parameters)
+    }
+  }
+
+  resolve_token_variants(parameters: {[key:string]:any}) {
+    for (const k in this.data.token_variants) {
+      if (parameters.hasOwnProperty(k)) {
+        this.output[k] = parameters[k]
+        continue
+      }
+
+      const variant = this.data.token_variants[k]!
+
+      if (variant.values.length > 1) {
+        const defaultValue = variant.values.find((v: any) => v.is_default)
+        if (defaultValue) {
+          this.output[k] = defaultValue.value
+        }
+      } else if (variant.values.length === 1) {
+        this.output[k] = variant.values[0].value
+      }
     }
   }
 
@@ -58,7 +80,22 @@ export class Renderer {
   resolve_operation(operation: any) {
     let result = null
 
-    switch (operation.type) {
+    if (['string', 'number'].includes(typeof operation)) {
+      return operation
+    }
+
+    switch (operation.method) {
+      case Method.Rgb:
+        result = this.resolve_rgb(operation)
+        break
+      case Method.Identity:
+        result = this.resolve_identity(operation)
+        break
+      case Method.Dimension:
+        result = this.resolve_dimension(operation)
+        break
+      case Method.Arithmetic:
+        break
       case 'hex':
         result = this.resolve_hex(operation)
         break
@@ -66,19 +103,34 @@ export class Renderer {
         result = this.resolve_func(operation)
         break
       default:
-        console.warn(`No resolver yet for type ${operation.type}`)
+        console.warn(`No resolver yet for type ${operation.method}`)
         break
     }
 
     return result
   }
 
+  resolve_dimension(operation: any) {
+    this.resolve_count++
+    return `${operation.parameters[0]}${operation.parameters[1]}`
+  }
+
+  resolve_identity(operation: any) {
+    this.resolve_count++
+    return operation.parameters[0]
+  }
+
   resolve_func(operation: any) {
     let result = null
 
+    const parameters = []
+    for (const param of operation.parameters) {
+      parameters.push(this.resolve_operation(param))
+    }
+
     switch (operation.method) {
       case 'rgb':
-        result = this.resolve_rgb(operation.parameters)
+        result = this.resolve_rgb(parameters)
         break
       default:
         console.warn(`No func resolver yet for method ${operation.method}`)
@@ -88,8 +140,16 @@ export class Renderer {
     return result
   }
 
-  resolve_rgb(params: string[]) {
-    return `rgba(${params[0]}, ${params[1]}, ${params[2]}, ${params[3] || '1.0'})`
+  resolve_rgb(operation: any) {
+    const parameters = operation.parameters.map((parameter_expression: any) => {
+      return this.resolve_identity(parameter_expression)
+    })
+
+    if (parameters.length === 4) {
+      return `rgba(${parameters.join(',')})`
+    } else {
+      return `rgba(${parameters.join(',')},1.0)`
+    }
   }
 
   resolve_hex(expression: any) {
@@ -98,19 +158,6 @@ export class Renderer {
   }
 
   is_resolved(expression: any) {
-    let resolved = false
-
-    switch (typeof expression) {
-      case 'string':
-        resolved = true
-        break
-      case 'number':
-        resolved = true
-        break
-      default:
-        break
-    }
-
-    return resolved
+    return ['string', 'number'].includes(typeof expression)
   }
 }

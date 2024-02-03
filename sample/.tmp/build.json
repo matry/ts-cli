@@ -1,0 +1,97 @@
+{
+  "token_variants": {
+    "dark-mode": {
+      "type": "switch",
+      "name": "dark-mode",
+      "values": [
+        {
+          "value": "on",
+          "is_default": false
+        },
+        {
+          "value": "off",
+          "is_default": true
+        }
+      ]
+    }
+  },
+  "token_declarations": {
+    "brand.main-color": {
+      "type": "color",
+      "name": "main-color",
+      "path": "brand.main-color",
+      "expression": [
+        {
+          "method": "RGB",
+          "return_type": "COLOR",
+          "parameters": [
+            {
+              "method": "IDENTITY",
+              "return_type": "NUMBER",
+              "parameters": [
+                "255"
+              ]
+            },
+            {
+              "method": "IDENTITY",
+              "return_type": "NUMBER",
+              "parameters": [
+                "255"
+              ]
+            },
+            {
+              "method": "IDENTITY",
+              "return_type": "NUMBER",
+              "parameters": [
+                "255"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "brand.secondary-color": {
+      "type": "color",
+      "name": "secondary-color",
+      "path": "brand.secondary-color",
+      "expression": [
+        {
+          "method": "IDENTITY",
+          "return_type": "COLOR",
+          "parameters": [
+            "#007BFF"
+          ]
+        }
+      ]
+    },
+    "brand.btn-copy": {
+      "type": "text",
+      "name": "btn-copy",
+      "path": "brand.btn-copy",
+      "expression": [
+        {
+          "method": "IDENTITY",
+          "return_type": "TEXT",
+          "parameters": [
+            "Hello World"
+          ]
+        }
+      ]
+    },
+    "brand.bg-image": {
+      "type": "asset",
+      "name": "bg-image",
+      "path": "brand.bg-image",
+      "expression": [
+        {
+          "method": "IDENTITY",
+          "return_type": "TEXT",
+          "parameters": [
+            "/assets/background.png"
+          ]
+        }
+      ]
+    }
+  },
+  "token_overrides": {}
+}

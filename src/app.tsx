@@ -1,8 +1,10 @@
 import React from 'react'
 import {Text} from 'ink'
-import { parse, writeToDisk } from './utils/controller.js'
-import { clearDirectory } from './utils/filesystem.js'
+import { writeTempFile } from './utils/controller.js'
+import { clearDirectory, getMatryProject } from './utils/filesystem.js'
 import { Renderer } from './parser/renderer.js'
+import './test/color-functions.js'
+import { Builder } from './parser/builder.js'
 
 type Props = {
 	input: string[]
@@ -10,21 +12,26 @@ type Props = {
 }
 
 export default function App({ dir = '.' , input = []}: Props) {
+	let output: any = null
+
 	const cmd = input[0] || ''
-	console.log(`received cmd ${cmd}`)
 
 	switch (cmd) {
 		case 'build':
 			clearDirectory('.tmp')
-			const content = parse(dir)
 
-			const renderer = new Renderer(content)
-			renderer.render()
+			const files = getMatryProject(dir) // transform directory into matry files
+			const builder = new Builder(files)
+			builder.build() // transform files into build tree
 
-			console.log('output')
-			console.log(renderer.output)
+			writeTempFile('build', builder.output)
 
-			writeToDisk(content)
+			const renderer = new Renderer(builder.output) // transform build into render tree
+			renderer.render({
+				'dark-mode': 'on',
+			})
+			writeTempFile('render', renderer.output)
+
 			break
 		default:
 			break
@@ -33,6 +40,12 @@ export default function App({ dir = '.' , input = []}: Props) {
 	return (
 		<>
 			<Text color="green">Parsing complete</Text>
+			{!!output && (
+				<Text color="green">
+
+				</Text>
+			)}
+
 			{/* {Object.entries(fileMap).map(([path, fileInfo]) => {
 				return (
 					<Box key={path}>
