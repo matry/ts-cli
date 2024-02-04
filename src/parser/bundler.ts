@@ -19,8 +19,16 @@ export class Bundler {
     ].join('\n')
   }
 
-  produceLines(obj: {[key:string]:string|number}): string[] {
-    return Object.entries(obj).map(([k, v]) => `  --${k.replaceAll('.', '-')}: ${v};`)
+  produceLines(obj: {[key:string]: any}): string[] {
+    return Object.entries(obj).map(([k, v]) => {
+      let value = v.value
+
+      if (v.type === 'text') {
+        value = `"${value}"`
+      }
+
+      return `  --${k.replaceAll('.', '-')}: ${value};`
+    })
   }
 
 }

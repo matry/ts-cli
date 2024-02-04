@@ -1,4 +1,14 @@
 
+class RenderItem {
+  type: string
+  value: string
+
+  constructor(type: string, value: string) {
+    this.type = type
+    this.value = value
+  }
+}
+
 export class Renderer {
   private resolve_count: number = 0
   private data: any = null
@@ -23,7 +33,10 @@ export class Renderer {
   resolve_token_variants(parameters: {[key:string]:any}) {
     for (const k in this.data.token_variants) {
       if (parameters.hasOwnProperty(k)) {
-        this.output[k] = parameters[k]
+        this.output[k] = {
+          type: 'text',
+          value: parameters[k],
+        }
         continue
       }
 
@@ -32,10 +45,16 @@ export class Renderer {
       if (variant.values.length > 1) {
         const defaultValue = variant.values.find((v: any) => v.is_default)
         if (defaultValue) {
-          this.output[k] = defaultValue.value
+          this.output[k] = {
+            type: 'text',
+            value: defaultValue.value,
+          }
         }
       } else if (variant.values.length === 1) {
-        this.output[k] = variant.values[0].value
+        this.output[k] = {
+          type: 'text',
+          value: variant.values[0].value
+        }
       }
     }
   }
@@ -66,9 +85,9 @@ export class Renderer {
         let shouldApply = false
 
         if (method === Method.Eq) {
-          shouldApply = this.output[variantKey] === value
+          shouldApply = this.output[variantKey]?.value === value
         } else if (method === Method.Neq) {
-          shouldApply = this.output[variantKey] !== value
+          shouldApply = this.output[variantKey]?.value !== value
         }
 
         if (shouldApply) {
@@ -127,14 +146,30 @@ export class Renderer {
     return result
   }
 
-  resolve_dimension(operation: any) {
+  resolve_dimension(operation: any): RenderItem {
     this.resolve_count++
-    return `${operation.parameters[0]}${operation.parameters[1]}`
+    return new RenderItem('dimension', `${operation.parameters[0]}${operation.parameters[1]}`)
   }
 
-  resolve_identity(operation: any) {
+  resolve_identity(operation: any): RenderItem {
     this.resolve_count++
-    return operation.parameters[0]
+
+    let type = ''
+    switch (operation.return_type) {
+      case ValueType.Color:
+        type = 'color'
+        break
+      case ValueType.Number:
+        type = 'number'
+        break
+      case ValueType.Text:
+        type = 'text'
+        break
+      default:
+        type = 'text'
+    }
+
+    return new RenderItem(type, operation.parameters[0])
   }
 
   resolve_func(operation: any) {
@@ -157,24 +192,35 @@ export class Renderer {
     return result
   }
 
-  resolve_rgb(operation: any) {
+  resolve_rgb(operation: any): RenderItem {
     const parameters = operation.parameters.map((parameter_expression: any) => {
-      return this.resolve_identity(parameter_expression)
+      return this.resolve_identity(parameter_expression).value
     })
 
+    let value = ''
+
     if (parameters.length === 4) {
-      return `rgba(${parameters.join(',')})`
+      value = `rgba(${parameters.join(',')})`
     } else {
-      return `rgba(${parameters.join(',')},1.0)`
+      value = `rgba(${parameters.join(',')},1.0)`
     }
+
+    return new RenderItem('color', value)
   }
 
-  resolve_hex(expression: any) {
+  resolve_hex(expression: any): RenderItem {
     this.resolve_count++
-    return expression.value
+    return new RenderItem(
+      'color',
+      expression.value,
+    )
   }
 
   is_resolved(expression: any) {
+    if (expression instanceof RenderItem) {
+      return true
+    }
+
     return ['string', 'number'].includes(typeof expression)
   }
 }
