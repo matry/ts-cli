@@ -21,6 +21,7 @@ const enum ValueType {
   Number = 'NUMBER',
   Color = 'COLOR',
   Bool = 'BOOL',
+  Asset = 'ASSET',
 }
 
 const enum ArithmeticOperator {

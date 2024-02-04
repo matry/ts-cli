@@ -1,22 +1,22 @@
 {
   "theme": {
-    "type": "text",
+    "type": "TEXT",
     "value": "rosemary"
   },
   "brand.main-color": {
-    "type": "color",
+    "type": "COLOR",
     "value": "rgba(255,255,255,1.0)"
   },
   "brand.secondary-color": {
-    "type": "color",
+    "type": "COLOR",
     "value": "#007BFF"
   },
   "brand.btn-copy": {
-    "type": "text",
+    "type": "TEXT",
     "value": "Hello World"
   },
   "brand.bg-image": {
-    "type": "text",
+    "type": "ASSET",
     "value": "/assets/background.png"
   }
 }

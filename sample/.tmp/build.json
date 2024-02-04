@@ -89,7 +89,7 @@
       "expression": [
         {
           "method": "IDENTITY",
-          "return_type": "TEXT",
+          "return_type": "ASSET",
           "parameters": [
             "/assets/background.png"
           ]

@@ -34,7 +34,7 @@ export class Renderer {
     for (const k in this.data.token_variants) {
       if (parameters.hasOwnProperty(k)) {
         this.output[k] = {
-          type: 'text',
+          type: ValueType.Text,
           value: parameters[k],
         }
         continue
@@ -46,13 +46,13 @@ export class Renderer {
         const defaultValue = variant.values.find((v: any) => v.is_default)
         if (defaultValue) {
           this.output[k] = {
-            type: 'text',
+            type: ValueType.Text,
             value: defaultValue.value,
           }
         }
       } else if (variant.values.length === 1) {
         this.output[k] = {
-          type: 'text',
+          type: ValueType.Text,
           value: variant.values[0].value
         }
       }
@@ -148,28 +148,12 @@ export class Renderer {
 
   resolve_dimension(operation: any): RenderItem {
     this.resolve_count++
-    return new RenderItem('dimension', `${operation.parameters[0]}${operation.parameters[1]}`)
+    return new RenderItem(ValueType.Number, `${operation.parameters[0]}${operation.parameters[1]}`)
   }
 
   resolve_identity(operation: any): RenderItem {
     this.resolve_count++
-
-    let type = ''
-    switch (operation.return_type) {
-      case ValueType.Color:
-        type = 'color'
-        break
-      case ValueType.Number:
-        type = 'number'
-        break
-      case ValueType.Text:
-        type = 'text'
-        break
-      default:
-        type = 'text'
-    }
-
-    return new RenderItem(type, operation.parameters[0])
+    return new RenderItem(operation.return_type, operation.parameters[0])
   }
 
   resolve_func(operation: any) {
@@ -205,13 +189,13 @@ export class Renderer {
       value = `rgba(${parameters.join(',')},1.0)`
     }
 
-    return new RenderItem('color', value)
+    return new RenderItem(ValueType.Color, value)
   }
 
   resolve_hex(expression: any): RenderItem {
     this.resolve_count++
     return new RenderItem(
-      'color',
+      ValueType.Color,
       expression.value,
     )
   }

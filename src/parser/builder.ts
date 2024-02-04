@@ -40,7 +40,7 @@ export class Builder {
   private parseAsset(node: SyntaxNode): FunctionExpression {
     return {
       method: Method.Identity,
-      return_type: ValueType.Text,
+      return_type: ValueType.Asset,
       parameters: [node.text],
     }
   }

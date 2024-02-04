@@ -21,10 +21,18 @@ export class Bundler {
 
   produceLines(obj: {[key:string]: any}): string[] {
     return Object.entries(obj).map(([k, v]) => {
-      let value = v.value
+      let value = ''
 
-      if (v.type === 'text') {
-        value = `"${value}"`
+      switch (v.type) {
+        case ValueType.Text:
+          value = `"${v.value}"`
+          break
+        case ValueType.Asset:
+          value = `"${v.value}"`
+          break
+        default:
+          value = v.value
+          break
       }
 
       return `  --${k.replaceAll('.', '-')}: ${value};`
